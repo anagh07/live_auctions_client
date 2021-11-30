@@ -1,6 +1,6 @@
 import { SET_ALERT, REMOVE_ALERT } from '../actions/types';
 
-const initialState = [];
+const initialState = []; // [ { msg: '', type: '', id: '' } ]
 
 export default function (state = initialState, action) {
   const { type, payload } = action;

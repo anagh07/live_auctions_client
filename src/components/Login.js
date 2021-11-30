@@ -1,11 +1,18 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
+// Material UI components
 import TextField from '@mui/material/TextField';
+import { Button } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
 // Actions
 import { login, skipLogin } from '../actions/auth';
+import { setAlert, removeAlert } from '../actions/alert';
 // Files
 import './css/auth.css';
 import Spinner from './Spinner';
@@ -50,6 +57,32 @@ const Login = (props) => {
           <p className='auth__subtitle'>
             <i className='fas fa-user'></i> Log in to your account
           </p>
+          {props.alerts.map((alert) => {
+            return (
+              <Box sx={{ width: '100%' }}>
+                <Collapse in={props.alerts.length > 0}>
+                  <Alert
+                    severity='error'
+                    action={
+                      <IconButton
+                        aria-label='close'
+                        color='inherit'
+                        size='small'
+                        onClick={() => {
+                          props.removeAlert(alert.id);
+                        }}
+                      >
+                        <CloseIcon fontSize='inherit' />
+                      </IconButton>
+                    }
+                    sx={{ mb: 2 }}
+                  >
+                    {alert.msg}
+                  </Alert>
+                </Collapse>
+              </Box>
+            );
+          })}
           <form
             className='form'
             onSubmit={(e) => {
@@ -112,6 +145,9 @@ const Login = (props) => {
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   loading: state.auth.loading,
+  alerts: state.alert,
 });
 
-export default connect(mapStateToProps, { login, skipLogin })(Login);
+export default connect(mapStateToProps, { login, skipLogin, setAlert, removeAlert })(
+  Login
+);

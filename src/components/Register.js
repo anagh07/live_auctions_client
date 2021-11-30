@@ -3,10 +3,17 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
+// Material UI components
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
 // Actions
 import { setAlert } from '../actions/alert';
+import { removeAlert } from '../actions/alert';
 import { register } from '../actions/auth';
 // Files
 import './css/auth.css';
@@ -17,11 +24,13 @@ const Register = (props) => {
   const [formData, setForm] = useState({
     name: '',
     email: '',
+    address: '',
+    phone: '',
     password: '',
     password2: '',
   });
 
-  const { name, email, password, password2 } = formData;
+  const { name, email, password, password2, address, phone } = formData;
 
   const onChange = (e) => {
     // e.preventDefault();
@@ -36,7 +45,7 @@ const Register = (props) => {
     if (password !== password2) {
       props.setAlert('Passwords do not match', 'danger');
     } else {
-      props.register({ name, email, password });
+      props.register({ name, email, password, address, phone });
     }
   };
 
@@ -58,6 +67,32 @@ const Register = (props) => {
           <p className='auth__subtitle'>
             <i className='fas fa-user'></i> Create Your Account
           </p>
+          {props.alerts.map((alert) => {
+            return (
+              <Box sx={{ width: '100%' }}>
+                <Collapse in={props.alerts.length > 0}>
+                  <Alert
+                    severity='error'
+                    action={
+                      <IconButton
+                        aria-label='close'
+                        color='inherit'
+                        size='small'
+                        onClick={() => {
+                          props.removeAlert(alert.id);
+                        }}
+                      >
+                        <CloseIcon fontSize='inherit' />
+                      </IconButton>
+                    }
+                    sx={{ mb: 2 }}
+                  >
+                    {alert.msg}
+                  </Alert>
+                </Collapse>
+              </Box>
+            );
+          })}
           <form
             className='form'
             onSubmit={(e) => {
@@ -70,7 +105,7 @@ const Register = (props) => {
                 size='small'
                 variant='outlined'
                 type='text'
-                placeholder='Name'
+                placeholder='Username'
                 name='name'
                 required
                 value={name}
@@ -88,6 +123,34 @@ const Register = (props) => {
                 placeholder='Email Address'
                 name='email'
                 value={email}
+                onChange={(e) => {
+                  onChange(e);
+                }}
+              />
+            </div>
+            <div className='form-group'>
+              <TextField
+                className='auth__text-field'
+                size='small'
+                variant='outlined'
+                type='text'
+                placeholder='Address'
+                name='address'
+                value={address}
+                onChange={(e) => {
+                  onChange(e);
+                }}
+              />
+            </div>
+            <div className='form-group'>
+              <TextField
+                className='auth__text-field'
+                size='small'
+                variant='outlined'
+                type='text'
+                placeholder='Phone'
+                name='phone'
+                value={phone}
                 onChange={(e) => {
                   onChange(e);
                 }}
@@ -151,6 +214,7 @@ Register.propTypes = {
 const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuthenticated,
   loading: state.auth.loading,
+  alerts: state.alert,
 });
 
-export default connect(mapStateToProps, { setAlert, register })(Register);
+export default connect(mapStateToProps, { setAlert, removeAlert, register })(Register);
