@@ -56,7 +56,9 @@ export const register =
       dispatch(loadUser());
     } catch (err) {
       // Get errors array sent by api
-      console.log(err);
+      if (!err.response) {
+        dispatch(setAlert('Server error', 'danger'));
+      }
       const errors = err.response.data.errors;
       if (errors) {
         errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
@@ -96,6 +98,9 @@ export const login = (email, password) => async (dispatch) => {
     dispatch(loadUser());
   } catch (err) {
     // Get errors array sent by api
+    if (!err.response) {
+      dispatch(setAlert('Server error', 'danger'));
+    }
     const errors = err.response.data.errors;
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
@@ -133,6 +138,9 @@ export const skipLogin = () => async (dispatch) => {
     dispatch(loadUser());
   } catch (err) {
     // Get errors array sent by api
+    if (!err.response) {
+      dispatch(setAlert('Server error', 'danger'));
+    }
     const errors = err.response.data.errors;
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
