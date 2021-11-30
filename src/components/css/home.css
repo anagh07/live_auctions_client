@@ -1,0 +1,10 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.home__display {
+  display: flex;
+  height: 100%;
+}

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import spinner from '../images/spinner.gif';
 import './css/spinner.css';
 

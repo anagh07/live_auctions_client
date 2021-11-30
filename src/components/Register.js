@@ -51,7 +51,7 @@ const Register = (props) => {
 
   // If already auth, redirect to dashboard
   if (props.isAuth) {
-    return <Navigate to='/home' />;
+    return <Navigate to='/' />;
   }
 
   return props.loading ? (
@@ -67,38 +67,41 @@ const Register = (props) => {
           <p className='auth__subtitle'>
             <i className='fas fa-user'></i> Create Your Account
           </p>
-          {props.alerts.map((alert) => {
-            return (
-              <Box sx={{ width: '100%' }}>
-                <Collapse in={props.alerts.length > 0}>
-                  <Alert
-                    severity='error'
-                    action={
-                      <IconButton
-                        aria-label='close'
-                        color='inherit'
-                        size='small'
-                        onClick={() => {
-                          props.removeAlert(alert.id);
-                        }}
-                      >
-                        <CloseIcon fontSize='inherit' />
-                      </IconButton>
-                    }
-                    sx={{ mb: 2 }}
-                  >
-                    {alert.msg}
-                  </Alert>
-                </Collapse>
-              </Box>
-            );
-          })}
+
           <form
             className='form'
             onSubmit={(e) => {
               onSubmit(e);
             }}
           >
+            <div className='form-group'>
+              {props.alerts.map((alert) => {
+                return (
+                  <Box sx={{ width: '100%' }}>
+                    <Collapse in={props.alerts.length > 0}>
+                      <Alert
+                        severity='error'
+                        action={
+                          <IconButton
+                            aria-label='close'
+                            color='inherit'
+                            size='small'
+                            onClick={() => {
+                              props.removeAlert(alert.id);
+                            }}
+                          >
+                            <CloseIcon fontSize='inherit' />
+                          </IconButton>
+                        }
+                        sx={{ mb: 2 }}
+                      >
+                        {alert.msg}
+                      </Alert>
+                    </Collapse>
+                  </Box>
+                );
+              })}
+            </div>
             <div className='form-group'>
               <TextField
                 className='auth__text-field'
