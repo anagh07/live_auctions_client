@@ -10,3 +10,7 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
+
+export const LOAD_ADS = 'LOAD_ADS';
+export const REMOVE_AD = 'REMOVE_AD';
+export const ADD_AD = 'ADD_AD';
