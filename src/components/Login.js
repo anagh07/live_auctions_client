@@ -5,11 +5,6 @@ import { Navigate } from 'react-router-dom';
 // Material UI components
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
-import Alert from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Collapse from '@mui/material/Collapse';
-import CloseIcon from '@mui/icons-material/Close';
 // Actions
 import { login, skipLogin } from '../actions/auth';
 import { setAlert, removeAlert } from '../actions/alert';
@@ -17,6 +12,7 @@ import { setAlert, removeAlert } from '../actions/alert';
 import './css/auth.css';
 import Spinner from './Spinner';
 import logo from '../images/auctionslogo3.png';
+import Alert from './Alert';
 // import Register from './Register';
 
 const Login = (props) => {
@@ -65,32 +61,7 @@ const Login = (props) => {
             }}
           >
             <div className='form-group'>
-              {props.alerts.map((alert) => {
-                return (
-                  <Box sx={{ width: '100%' }}>
-                    <Collapse in={props.alerts.length > 0}>
-                      <Alert
-                        severity='error'
-                        action={
-                          <IconButton
-                            aria-label='close'
-                            color='inherit'
-                            size='small'
-                            onClick={() => {
-                              props.removeAlert(alert.id);
-                            }}
-                          >
-                            <CloseIcon fontSize='inherit' />
-                          </IconButton>
-                        }
-                        sx={{ mb: 2 }}
-                      >
-                        {alert.msg}
-                      </Alert>
-                    </Collapse>
-                  </Box>
-                );
-              })}
+              <Alert />
             </div>
 
             <div className='form-group'>

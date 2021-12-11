@@ -58,14 +58,15 @@ export const register =
       // Get errors array sent by api
       if (!err.response) {
         dispatch(setAlert('Server error', 'danger'));
+      } else {
+        const errors = err.response.data.errors;
+        if (errors) {
+          errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+        }
       }
-      const errors = err.response.data.errors;
-      if (errors) {
-        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-      }
-
+  
       dispatch({
-        type: REGISTER_FAIL,
+        type: LOGIN_FAIL,
       });
     }
   };
@@ -81,7 +82,6 @@ export const login = (email, password) => async (dispatch) => {
   const body = JSON.stringify({ email, password });
 
   try {
-    console.log(body);
     const res = await axios.post(
       `${process.env.REACT_APP_API_BASE_URL}/auth`,
       body,
@@ -100,10 +100,11 @@ export const login = (email, password) => async (dispatch) => {
     // Get errors array sent by api
     if (!err.response) {
       dispatch(setAlert('Server error', 'danger'));
-    }
-    const errors = err.response.data.errors;
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    } else {
+      const errors = err.response.data.errors;
+      if (errors) {
+        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      }
     }
 
     dispatch({
@@ -140,10 +141,11 @@ export const skipLogin = () => async (dispatch) => {
     // Get errors array sent by api
     if (!err.response) {
       dispatch(setAlert('Server error', 'danger'));
-    }
-    const errors = err.response.data.errors;
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    } else {
+      const errors = err.response.data.errors;
+      if (errors) {
+        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      }
     }
 
     dispatch({

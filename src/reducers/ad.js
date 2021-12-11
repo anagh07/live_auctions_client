@@ -1,8 +1,9 @@
-import { LOAD_ADS, REMOVE_AD, ADD_AD } from '../actions/types';
+import { LOAD_ADS, REMOVE_AD, ADD_AD, LOAD_AD_DETAILS } from '../actions/types';
 
 const initialState = {
   ads: [],
   loading: true,
+  adDetails: {},
 };
 
 export default function (state = initialState, action) {
@@ -14,6 +15,13 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         ads: payload,
+      };
+
+    case LOAD_AD_DETAILS:
+      return {
+        ...state,
+        adDetails: payload,
+        loading: false,
       };
 
     default:

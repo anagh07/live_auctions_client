@@ -14,3 +14,4 @@ export const LOGOUT = 'LOGOUT';
 export const LOAD_ADS = 'LOAD_ADS';
 export const REMOVE_AD = 'REMOVE_AD';
 export const ADD_AD = 'ADD_AD';
+export const LOAD_AD_DETAILS = 'LOAD_AD_DETAILS';
