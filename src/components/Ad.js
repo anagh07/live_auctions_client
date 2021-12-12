@@ -118,16 +118,16 @@ const Ad = (props) => {
                 <Divider variant='middle' sx={{ margin: '.5rem' }} />
 
                 <Typography variant='h6'>Auction</Typography>
-                <Typography variant='body2'>
+                <Typography variant='body1'>
                   Seller: {props.adDetails.owner.username}
                 </Typography>
-                <Typography variant='body2'>
+                <Typography variant='body1'>
                   Base price: {props.adDetails.basePrice.$numberDecimal}
                 </Typography>
-                <Typography variant='body2'>
+                <Typography variant='body1'>
                   Bids: {props.adDetails.bids.length}
                 </Typography>
-                <Typography variant='body2'>Status: {auctionStatus()}</Typography>
+                <Typography variant='body1'>Status: {auctionStatus()}</Typography>
                 <Divider variant='middle' sx={{ margin: '.5rem' }} />
 
                 <Typography variant='body1'>
