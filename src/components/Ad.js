@@ -53,6 +53,15 @@ const Ad = (props) => {
     updateBidButtonStatus(bidPrice);
   }, [bidPrice]);
 
+  if (props.authLoading) {
+    return <Spinner />;
+  }
+
+  // Check if user is logged
+  if (!props.isAuth) {
+    navigate('/login');
+  }
+
   if (props.loading || props.loadingHighestBid) {
     console.log('loading');
     return <Spinner />;
@@ -78,15 +87,6 @@ const Ad = (props) => {
       return 'Ongoing';
     }
   };
-
-  if (props.authLoading) {
-    return <Spinner />;
-  }
-
-  // Check if user is logged
-  if (!props.isAuth) {
-    navigate('/')
-  }
 
   return props.loading ? (
     <Spinner />

@@ -4,7 +4,6 @@ const initialState = []; // [ { msg: '', type: '', id: '' } ]
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
-  console.log('Reduce');
 
   switch (type) {
     case SET_ALERT:
