@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, connect } from 'react-redux';
 import { useParams, Navigate } from 'react-router-dom';
 // Actions
-import { loadAdDetails } from '../actions/ad';
-import Alert from './Alert';
+import { loadAdDetails, loadHighestBid, placeBid } from '../actions/ad';
+import { setAlert } from '../actions/alert';
 // MUI Components
 import { Paper, Box, Typography, Divider, TextField, Button } from '@mui/material';
 // Project components
+import Alert from './Alert';
 import Nav from './Nav';
 import Spinner from './Spinner';
 import imagePlaceholder from '../images/no-image-icon.png';
@@ -26,19 +27,44 @@ const Ad = (props) => {
   const [bidPrice, setBidPrice] = useState(0);
   const [bidButton, setBidButton] = useState(true);
 
-  useEffect(async () => {
-    await props.loadAdDetails(params.adId);
+  // Bid button status
+  const updateBidButtonStatus = (updatedPrice) => {
+    if (
+      updatedPrice > Number(props.adDetails.currentPrice.$numberDecimal) &&
+      props.adDetails.auctionStarted &&
+      !props.adDetails.auctionEnded
+    ) {
+      setBidButton(false);
+    } else {
+      setBidButton(true);
+    }
+  };
+
+  useEffect(() => {
+    props.loadAdDetails(params.adId);
+  }, [params.adId]);
+
+  useEffect(() => {
+    props.loadHighestBid(params.adId);
   }, []);
+
+  useEffect(() => {
+    updateBidButtonStatus(bidPrice);
+  }, [bidPrice]);
+
+  if (props.loading || props.loadingHighestBid) {
+    console.log('loading');
+    return <Spinner />;
+  }
 
   const handleBidPriceChange = (e) => {
     setBidPrice(e.target.value);
-    setBidPrice((bidPrice) => {
-      updateBidButtonStatus(bidPrice);
-    });
   };
 
   const handleSubmitBid = (e) => {
-    // place bid action
+    e.preventDefault();
+    // Place bid
+    props.placeBid(props.adDetails._id, bidPrice);
   };
 
   // Auction status based on the ad-details
@@ -49,17 +75,6 @@ const Ad = (props) => {
       return 'Pending';
     } else {
       return 'Ongoing';
-    }
-  };
-
-  // Bid button status
-  const updateBidButtonStatus = (updatedPrice) => {
-    if (
-      updatedPrice >= Number(props.adDetails.currentPrice.$numberDecimal) &&
-      props.adDetails.auctionStarted &&
-      !props.adDetails.auctionEnded
-    ) {
-      setBidButton(false);
     }
   };
 
@@ -76,9 +91,10 @@ const Ad = (props) => {
     <Spinner />
   ) : (
     <div className='ad__page'>
-      <div className='nav__display'>
+      {/* <div className='nav__display'>
         <Nav />
-      </div>
+      </div> */}
+      <Alert />
       {!props.adDetails.owner ? (
         <Spinner />
       ) : (
@@ -119,6 +135,9 @@ const Ad = (props) => {
                 <Typography variant='body1'>
                   Current price: ${props.adDetails.currentPrice.$numberDecimal}
                 </Typography>
+                <Typography variant='body1'>
+                  Current bidder: {props.highestBid && props.highestBid.user.username}
+                </Typography>
                 <Divider variant='middle' sx={{ margin: '.5rem' }} />
 
                 <Box sx={bidContainer}>
@@ -153,6 +172,8 @@ const mapStateToProps = (state) => ({
   authLoading: state.auth.loading,
   isAuth: state.auth.isAuthenticated,
   alerts: state.alert,
+  highestBid: state.ad.highestBid,
+  loadingBid: state.ad.loadingHighestBid,
 });
 
-export default connect(mapStateToProps, { loadAdDetails })(Ad);
+export default connect(mapStateToProps, { loadAdDetails, loadHighestBid, placeBid })(Ad);

@@ -16,9 +16,9 @@ const Home = (props) => {
 
   return (
     <div className='home'>
-      <div className='nav__display'>
+      {/* <div className='nav__display'>
         <Nav />
-      </div>
+      </div> */}
       <div className='alert__display'>
         <Alert />
       </div>

@@ -11,7 +11,7 @@ const ErrorAlert = (props) =>
   props.alerts !== null &&
   props.alerts.length > 0 &&
   props.alerts.map((alert) => (
-    <Box sx={{ width: '100%' }}>
+    <Box key={alert.id} sx={{ width: '100%' }}>
       <Alert
         severity='error'
         action={

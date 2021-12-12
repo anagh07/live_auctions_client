@@ -6,6 +6,9 @@ import Login from './components/Login';
 import Home from './components/Home';
 import Register from './components/Register';
 import Ad from './components/Ad';
+import AdForm from './components/AdForm';
+import Nav from './components/Nav';
+import Dashboard from './components/Dashboard';
 // Actions
 import { loadUser } from './actions/auth';
 // Redux
@@ -21,11 +24,14 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
+        <Nav />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/ads/:adId' element={<Ad />} />
+          <Route path='/postad' element={<AdForm />} />
+          <Route path='/dashboard' element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
     </Provider>

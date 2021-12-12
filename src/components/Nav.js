@@ -14,25 +14,32 @@ const Nav = (props) => {
     <div className='nav'>
       <div className='nav__group1'>
         <div className='nav__image-container'>
-          <a href='/'>
+          <RouterLink to='/'>
             <img className='nav__icon' src={logo} alt='navicon' href='/' />
-          </a>
-        </div>
-
-        <div className='nav__buttons'>
-          <Button>My Dashboard</Button>
-          <RouterLink to='/create'>
-            <Button variant='contained' color='primary'>
-              Create
-            </Button>
           </RouterLink>
         </div>
+
+        {props.isAuth && (
+          <div className='nav__buttons'>
+            <RouterLink to='/dashboard' style={{ textDecoration: 'none' }}>
+              <Button>Dashboard</Button>
+            </RouterLink>
+            <RouterLink to='/postad' style={{ textDecoration: 'none' }}>
+              <Button>Post Ad</Button>
+            </RouterLink>
+          </div>
+        )}
       </div>
 
       <div className='nav__group2'>
         <div className='nav__account'>
           {props.isAuth ? (
-            <Link href='#' color='inherit' onClick={props.logout}>
+            <Link
+              href='#'
+              color='inherit'
+              onClick={props.logout}
+              sx={{ textDecoration: 'none' }}
+            >
               Logout
             </Link>
           ) : (

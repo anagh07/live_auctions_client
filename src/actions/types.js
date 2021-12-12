@@ -11,7 +11,10 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 
+export const POST_AD = 'POST_AD';
 export const LOAD_ADS = 'LOAD_ADS';
 export const REMOVE_AD = 'REMOVE_AD';
 export const ADD_AD = 'ADD_AD';
 export const LOAD_AD_DETAILS = 'LOAD_AD_DETAILS';
+export const LOAD_HIGHEST_BID = 'LOAD_HIGHEST_BID';
+export const PLACE_BID = 'PLACE_BID';

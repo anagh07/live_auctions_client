@@ -1,55 +1,54 @@
 .nav__icon {
-    object-fit: contain;
-    height: 40px;
-    margin-left: 15px;
-  }
-  
-  .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    background-color: #ffffff;
-    width: 100%;
-    z-index: 100;
-    box-shadow: 0 0 7px 0px #cecece;
-  }
-  
-  .nav__group1,
-  .nav__group2 {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    height: 35px;
-  }
-  .nav__group1 > * {
-    margin: 0 20px;
-  }
-  .nav__group2 > * {
-    margin: 0 20px;
-  }
-  .nav__buttons {
-    display: flex;
-  }
-  .nav__buttons > Button {
-    margin: 0 5px;
-  }
-  
-  .nav__search {
-    display: flex;
-    align-items: center;
-    border: 1.5px solid #b4b4b4;
-    border-radius: 900px;
-    height: 80%;
-  }
-  .nav__search > input {
-    border: none;
-    outline-width: 0;
-    padding: 0 10px;
-  }
-  
-  .nav__account {
-    margin-right: 15px;
-  }
-  
+  object-fit: contain;
+  height: 40px;
+  margin-left: 15px;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 0 7px 0px #cecece;
+}
+
+.nav__group1,
+.nav__group2 {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  height: 35px;
+}
+.nav__group1 > * {
+  margin: 0 20px;
+}
+.nav__group2 > * {
+  margin: 0 20px;
+}
+.nav__buttons {
+  display: flex;
+}
+.nav__buttons > Button {
+  margin: 0 5px;
+}
+
+.nav__search {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #b4b4b4;
+  border-radius: 900px;
+  height: 80%;
+}
+.nav__search > input {
+  border: none;
+  outline-width: 0;
+  padding: 0 10px;
+}
+
+.nav__account {
+  margin-right: 15px;
+}
