@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, connect } from 'react-redux';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 // Actions
 import { loadAdDetails, loadHighestBid, placeBid } from '../actions/ad';
 import { setAlert } from '../actions/alert';
@@ -26,6 +26,7 @@ const Ad = (props) => {
   const params = useParams();
   const [bidPrice, setBidPrice] = useState(0);
   const [bidButton, setBidButton] = useState(true);
+  const navigate = useNavigate();
 
   // Bid button status
   const updateBidButtonStatus = (updatedPrice) => {
@@ -84,7 +85,7 @@ const Ad = (props) => {
 
   // Check if user is logged
   if (!props.isAuth) {
-    return <Navigate to='/login' />;
+    navigate('/')
   }
 
   return props.loading ? (
