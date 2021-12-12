@@ -18,7 +18,9 @@ export const imageStyle = { height: 'auto', width: '100%' };
 
 export const descriptionArea = { flex: '50%', margin: '0rem 0rem 0rem .7rem' };
 
-export const bidContainer = { margin: '.5rem', marginLeft: '0rem' };
+export const bidContainer = { display: 'flex', margin: '.5rem', marginLeft: '0rem' };
+
+export const bidButtonStyle = { height: '100%' };
 
 export const adFormArea = {
   padding: '3rem',

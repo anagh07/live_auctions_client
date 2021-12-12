@@ -8,7 +8,6 @@ import { setAlert } from '../actions/alert';
 import { Paper, Box, Typography, Divider, TextField, Button } from '@mui/material';
 // Project components
 import Alert from './Alert';
-import Nav from './Nav';
 import Spinner from './Spinner';
 import imagePlaceholder from '../images/no-image-icon.png';
 
@@ -20,6 +19,7 @@ import {
   descriptionArea,
   imageContainer,
   bidContainer,
+  bidButtonStyle,
 } from './css/adStyles.js';
 
 const Ad = (props) => {
@@ -150,13 +150,16 @@ const Ad = (props) => {
                       handleBidPriceChange(e);
                     }}
                   />
-                  <Button
-                    variant='contained'
-                    disabled={bidButton}
-                    onClick={(e) => handleSubmitBid(e)}
-                  >
-                    Place bid
-                  </Button>
+                  <Box sx={{ height: 'auto' }}>
+                    <Button
+                      variant='contained'
+                      disabled={bidButton}
+                      onClick={(e) => handleSubmitBid(e)}
+                      sx={bidButtonStyle}
+                    >
+                      Place bid
+                    </Button>
+                  </Box>
                 </Box>
               </Box>
             </Box>
