@@ -11,26 +11,32 @@ import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
 
 // Load ads
-export const loadAds = () => async (dispatch) => {
-  try {
-    const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/ad`);
+export const loadAds =
+  (userId = null) =>
+  async (dispatch) => {
+    let config = null;
+    if (userId) {
+      config = { params: { user: userId } };
+    }
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/ad`, config);
 
-    dispatch({
-      type: LOAD_ADS,
-      payload: res.data,
-    });
-  } catch (error) {
-    // Get errors array sent by api
-    if (!error.response) {
-      return dispatch(setAlert('Server error', 'danger'));
+      dispatch({
+        type: LOAD_ADS,
+        payload: res.data,
+      });
+    } catch (error) {
+      // Get errors array sent by api
+      if (!error.response) {
+        return dispatch(setAlert('Server error', 'danger'));
+      }
+      console.log(error.response);
+      const errors = error.response.data.errors;
+      if (errors) {
+        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      }
     }
-    console.log(error.response);
-    const errors = error.response.data.errors;
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-    }
-  }
-};
+  };
 
 // Load ad details
 export const loadAdDetails = (adId) => async (dispatch) => {

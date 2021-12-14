@@ -101,6 +101,7 @@ const Ad = (props) => {
   const handleStartAuction = (e) => {
     e.preventDefault();
     props.startAuction(props.adDetails._id);
+    props.setAlert('Auction started', 'success');
   };
 
   const getTimeRemaining = () => {
@@ -231,4 +232,5 @@ export default connect(mapStateToProps, {
   loadHighestBid,
   placeBid,
   startAuction,
+  setAlert,
 })(Ad);

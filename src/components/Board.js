@@ -11,7 +11,8 @@ import Card from './Card';
 
 const Board = (props) => {
   useEffect(() => {
-    props.loadAds();
+    if (props.passedUser) props.loadAds(props.passedUser);
+    else props.loadAds();
   }, []);
 
   // Check if user is logged

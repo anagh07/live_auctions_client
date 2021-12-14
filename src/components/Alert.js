@@ -13,7 +13,7 @@ const ErrorAlert = (props) =>
   props.alerts.map((alert) => (
     <Box key={alert.id} sx={{ width: '100%' }}>
       <Alert
-        severity='error'
+        severity={alert.type ? alert.type : 'error'}
         action={
           <IconButton
             aria-label='close'

@@ -21,6 +21,9 @@ const Nav = (props) => {
 
         {props.isAuth && (
           <div className='nav__buttons'>
+            <RouterLink to='/' style={{ textDecoration: 'none' }}>
+              <Button>Home</Button>
+            </RouterLink>
             <RouterLink to='/dashboard' style={{ textDecoration: 'none' }}>
               <Button>Dashboard</Button>
             </RouterLink>
