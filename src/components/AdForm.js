@@ -29,6 +29,7 @@ import { setAlert } from '../actions/alert';
 const AdForm = (props) => {
   const [form, setForm] = useState({
     productName: '',
+    description: '',
     basePrice: 0,
     duration: 0,
     category: '',
@@ -85,6 +86,18 @@ const AdForm = (props) => {
               sx={formTextField}
             ></TextField>
           </Box>
+          <Box sx={formComponent}>
+            <InputLabel>Description</InputLabel>
+            <TextField
+              name='description'
+              multiline
+              placeholder='Product description'
+              onChange={(e) => handleFormChange(e)}
+              size='small'
+              rows={3}
+              sx={formTextField}
+            />
+          </Box>
 
           <Box sx={formComponent}>
             <InputLabel>Base Price</InputLabel>
@@ -94,6 +107,7 @@ const AdForm = (props) => {
                 handleFormChange(e);
               }}
               size='small'
+              placeholder='Auction will start from this price point.'
               sx={formTextField}
             ></TextField>
           </Box>
@@ -106,6 +120,7 @@ const AdForm = (props) => {
                 handleFormChange(e);
               }}
               size='small'
+              placeholder='Duration in seconds'
               sx={formTextField}
             ></TextField>
           </Box>
@@ -118,6 +133,7 @@ const AdForm = (props) => {
                 handleFormChange(e);
               }}
               size='small'
+              placeholder='Food, electronics, sports ...'
               sx={formTextField}
             ></TextField>
           </Box>
@@ -130,6 +146,7 @@ const AdForm = (props) => {
                 handleFormChange(e);
               }}
               size='small'
+              placeholder='Direct image link (jpg/png/jpeg). Can be an imgur direct link.'
               sx={formTextField}
             ></TextField>
           </Box>

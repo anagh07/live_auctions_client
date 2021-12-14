@@ -1,11 +1,10 @@
 import {
   POST_AD,
   LOAD_ADS,
-  REMOVE_AD,
-  ADD_AD,
   LOAD_AD_DETAILS,
   LOAD_HIGHEST_BID,
   PLACE_BID,
+  START_AUCTION,
 } from '../actions/types';
 
 const initialState = {
@@ -52,6 +51,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         ads: [...state.ads, payload],
+        loading: false,
+      };
+
+    case START_AUCTION:
+      return {
+        ...state,
+        adDetails: { ...state.adDetails, auctionStarted: true },
         loading: false,
       };
 

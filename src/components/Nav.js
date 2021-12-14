@@ -43,7 +43,9 @@ const Nav = (props) => {
               Logout
             </Link>
           ) : (
-            <Link to='/login'>Login</Link>
+            <Link to='/login' sx={{ textDecoration: 'none' }}>
+              Login
+            </Link>
           )}
         </div>
       </div>

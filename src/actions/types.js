@@ -18,3 +18,5 @@ export const ADD_AD = 'ADD_AD';
 export const LOAD_AD_DETAILS = 'LOAD_AD_DETAILS';
 export const LOAD_HIGHEST_BID = 'LOAD_HIGHEST_BID';
 export const PLACE_BID = 'PLACE_BID';
+
+export const START_AUCTION = 'START_AUCTION';

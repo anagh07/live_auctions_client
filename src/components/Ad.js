@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, connect } from 'react-redux';
-import { useParams, Navigate, useNavigate } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
 // Actions
-import { loadAdDetails, loadHighestBid, placeBid } from '../actions/ad';
+import { loadAdDetails, loadHighestBid, placeBid, startAuction } from '../actions/ad';
 import { setAlert } from '../actions/alert';
 // MUI Components
 import { Paper, Box, Typography, Divider, TextField, Button } from '@mui/material';
@@ -10,7 +10,6 @@ import { Paper, Box, Typography, Divider, TextField, Button } from '@mui/materia
 import Alert from './Alert';
 import Spinner from './Spinner';
 import imagePlaceholder from '../images/no-image-icon.png';
-
 import {
   boxStyle,
   adArea,
@@ -21,11 +20,14 @@ import {
   bidContainer,
   bidButtonStyle,
 } from './css/adStyles.js';
+import secondsToHms from '../utils/secondsToHms';
 
 const Ad = (props) => {
   const params = useParams();
   const [bidPrice, setBidPrice] = useState(0);
   const [bidButton, setBidButton] = useState(true);
+  const [ownerAd, setOwnerAd] = useState(false);
+  const [startButton, setStartButton] = useState(true);
   const navigate = useNavigate();
 
   // Bid button status
@@ -53,6 +55,25 @@ const Ad = (props) => {
     updateBidButtonStatus(bidPrice);
   }, [bidPrice]);
 
+  // Check if current user is the owner of ad
+  useEffect(() => {
+    if (props.adDetails.owner) {
+      if (props.adDetails.owner._id === props.auth.user._id) setOwnerAd(true);
+      else setOwnerAd(false);
+    }
+    // Check start button
+    if (!props.adDetails.auctionStarted && !props.adDetails.auctionEnded) {
+      setStartButton(true);
+    } else {
+      setStartButton(false);
+    }
+  }, [
+    props.adDetails.owner,
+    props.auth.user,
+    props.adDetails.auctionStarted,
+    props.adDetails.auctionEnded,
+  ]);
+
   if (props.authLoading) {
     return <Spinner />;
   }
@@ -77,12 +98,21 @@ const Ad = (props) => {
     props.placeBid(props.adDetails._id, bidPrice);
   };
 
+  const handleStartAuction = (e) => {
+    e.preventDefault();
+    props.startAuction(props.adDetails._id);
+  };
+
+  const getTimeRemaining = () => {
+    return secondsToHms(props.adDetails.timer);
+  };
+
   // Auction status based on the ad-details
   const auctionStatus = () => {
     if (props.adDetails.auctionEnded) {
       return 'Sold';
     } else if (!props.adDetails.auctionStarted) {
-      return 'Pending';
+      return 'Upcoming';
     } else {
       return 'Ongoing';
     }
@@ -112,9 +142,7 @@ const Ad = (props) => {
               </Box>
               <Box sx={descriptionArea}>
                 <Typography variant='h6'>Description</Typography>
-                <Typography variant='body2'>
-                  Product description text goes here.
-                </Typography>
+                <Typography variant='body2'>{props.adDetails.description}</Typography>
                 <Divider variant='middle' sx={{ margin: '.5rem' }} />
 
                 <Typography variant='h6'>Auction</Typography>
@@ -131,7 +159,7 @@ const Ad = (props) => {
                 <Divider variant='middle' sx={{ margin: '.5rem' }} />
 
                 <Typography variant='body1'>
-                  Time remaining: {props.adDetails.timer}
+                  Time remaining: {getTimeRemaining()}
                 </Typography>
                 <Typography variant='body1'>
                   Current price: ${props.adDetails.currentPrice.$numberDecimal}
@@ -141,26 +169,43 @@ const Ad = (props) => {
                 </Typography>
                 <Divider variant='middle' sx={{ margin: '.5rem' }} />
 
-                <Box sx={bidContainer}>
-                  <TextField
-                    label='$'
-                    id='bid-price'
-                    size='small'
-                    onChange={(e) => {
-                      handleBidPriceChange(e);
-                    }}
-                  />
-                  <Box sx={{ height: 'auto' }}>
-                    <Button
-                      variant='contained'
-                      disabled={bidButton}
-                      onClick={(e) => handleSubmitBid(e)}
-                      sx={bidButtonStyle}
-                    >
-                      Place bid
-                    </Button>
+                {!ownerAd && (
+                  <Box sx={bidContainer}>
+                    <TextField
+                      label='$'
+                      id='bid-price'
+                      size='small'
+                      onChange={(e) => {
+                        handleBidPriceChange(e);
+                      }}
+                    />
+                    <Box sx={{ height: 'auto' }}>
+                      <Button
+                        variant='contained'
+                        disabled={bidButton}
+                        onClick={(e) => handleSubmitBid(e)}
+                        sx={bidButtonStyle}
+                      >
+                        Place bid
+                      </Button>
+                    </Box>
                   </Box>
-                </Box>
+                )}
+
+                {ownerAd && (
+                  <Box sx={bidContainer}>
+                    <Box sx={{ height: 'auto' }}>
+                      <Button
+                        variant='contained'
+                        disabled={!startButton}
+                        onClick={(e) => handleStartAuction(e)}
+                        sx={bidButtonStyle}
+                      >
+                        Start Auction
+                      </Button>
+                    </Box>
+                  </Box>
+                )}
               </Box>
             </Box>
           </Paper>
@@ -178,6 +223,12 @@ const mapStateToProps = (state) => ({
   alerts: state.alert,
   highestBid: state.ad.highestBid,
   loadingBid: state.ad.loadingHighestBid,
+  auth: state.auth,
 });
 
-export default connect(mapStateToProps, { loadAdDetails, loadHighestBid, placeBid })(Ad);
+export default connect(mapStateToProps, {
+  loadAdDetails,
+  loadHighestBid,
+  placeBid,
+  startAuction,
+})(Ad);
