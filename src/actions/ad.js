@@ -6,6 +6,7 @@ import {
   PLACE_BID,
   POST_AD,
   START_AUCTION,
+  USER_PURCHASED_LOADED,
 } from './types';
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
@@ -28,12 +29,12 @@ export const loadAds =
     } catch (error) {
       // Get errors array sent by api
       if (!error.response) {
-        return dispatch(setAlert('Server error', 'danger'));
+        return dispatch(setAlert('Server error', 'error'));
       }
       console.log(error.response);
       const errors = error.response.data.errors;
       if (errors) {
-        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+        errors.forEach((error) => dispatch(setAlert(error.msg, 'error')));
       }
     }
   };
@@ -53,13 +54,13 @@ export const loadAdDetails = (adId) => async (dispatch) => {
   } catch (error) {
     // Get errors array sent by api
     if (!error.response) {
-      return dispatch(setAlert('Server error', 'danger'));
+      return dispatch(setAlert('Server error', 'error'));
     }
     console.log(error.response);
     const errors = error.response.data.errors;
     if (errors) {
       console.log(errors);
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger', 50000)));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'error', 50000)));
     }
   }
 };
@@ -77,13 +78,13 @@ export const loadHighestBid = (adId) => async (dispatch) => {
   } catch (error) {
     // Get errors array sent by api
     if (!error.response) {
-      return dispatch(setAlert('Server error', 'danger'));
+      return dispatch(setAlert('Server error', 'error'));
     }
     console.log(error.response);
     const errors = error.response.data.errors;
     if (errors) {
       console.log(errors);
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger', 50000)));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'error', 50000)));
     }
   }
 };
@@ -101,13 +102,13 @@ export const placeBid = (adId, bidAmount) => async (dispatch) => {
   } catch (error) {
     // Get errors array sent by api
     if (!error.response) {
-      return dispatch(setAlert('Server error', 'danger'));
+      return dispatch(setAlert('Server error', 'error'));
     }
     console.log(error.response);
     const errors = error.response.data.errors;
     if (errors) {
       console.log(errors);
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger', 50000)));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'error', 50000)));
     }
   }
 };
@@ -127,13 +128,13 @@ export const postAd = (data) => async (dispatch) => {
   } catch (error) {
     // Get errors array sent by api
     if (!error.response) {
-      return dispatch(setAlert('Server error', 'danger'));
+      return dispatch(setAlert('Server error', 'error'));
     }
     console.log(error.response);
     const errors = error.response.data.errors;
     if (errors) {
       console.log(errors);
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger', 50000)));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'error', 50000)));
     }
   }
 };
@@ -150,13 +151,37 @@ export const startAuction = (adId) => async (dispatch) => {
   } catch (error) {
     // Get errors array sent by api
     if (!error.response) {
-      return dispatch(setAlert('Server error', 'danger'));
+      return dispatch(setAlert('Server error', 'error'));
     }
     console.log(error.response);
     const errors = error.response.data.errors;
     if (errors) {
       console.log(errors);
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger', 50000)));
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'error', 50000)));
+    }
+  }
+};
+
+// Load ads purchased by user
+export const getUserPurchasedAds = () => async (dispatch) => {
+  const url = `${process.env.REACT_APP_API_BASE_URL}/user/products/purchased`;
+  try {
+    const res = await axios.get(url);
+    console.log(res.data);
+    dispatch({
+      type: USER_PURCHASED_LOADED,
+      payload: res.data,
+    });
+  } catch (error) {
+    // Get errors array sent by api
+    if (!error.response) {
+      return dispatch(setAlert('Server error', 'error'));
+    }
+    console.log(error.response);
+    const errors = error.response.data.errors;
+    if (errors) {
+      console.log(errors);
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'error', 50000)));
     }
   }
 };

@@ -5,6 +5,7 @@ import {
   LOAD_HIGHEST_BID,
   PLACE_BID,
   START_AUCTION,
+  USER_PURCHASED_LOADED,
 } from '../actions/types';
 
 const initialState = {
@@ -13,6 +14,8 @@ const initialState = {
   adDetails: { currentPrice: { $numberDecimal: 0 } },
   loadingHighestBid: true,
   highestBid: { user: { username: '' } },
+  purchasedLoading: true,
+  purchased: [],
 };
 
 export default function (state = initialState, action) {
@@ -59,6 +62,13 @@ export default function (state = initialState, action) {
         ...state,
         adDetails: { ...state.adDetails, auctionStarted: true },
         loading: false,
+      };
+
+    case USER_PURCHASED_LOADED:
+      return {
+        ...state,
+        purchased: payload,
+        purchasedLoading: false,
       };
 
     default:

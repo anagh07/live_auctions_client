@@ -96,6 +96,7 @@ const Ad = (props) => {
     e.preventDefault();
     // Place bid
     props.placeBid(props.adDetails._id, bidPrice);
+    props.setAlert('Bid submitted', 'success');
   };
 
   const handleStartAuction = (e) => {
