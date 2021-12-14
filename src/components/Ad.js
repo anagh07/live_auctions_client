@@ -20,7 +20,7 @@ import {
   bidContainer,
   bidButtonStyle,
 } from './css/adStyles.js';
-import secondsToHms from '../utils/secondsToHms';
+import { secondsToHms } from '../utils/secondsToHms';
 
 const Ad = (props) => {
   const params = useParams();

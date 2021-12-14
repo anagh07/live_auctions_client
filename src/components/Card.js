@@ -11,10 +11,23 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 // Files
 import imagePlaceholder from '../images/no-image-icon.png';
+import { adArea } from './css/adStyles';
+import { secondsToHmsShort } from '../utils/secondsToHms';
 
 function MediaCard(props) {
   const handleCardClick = (e) => {
     props.loadAdDetails(props.ad._id);
+  };
+
+  // Auction status based on the ad-details
+  const auctionStatus = (ad) => {
+    if (ad.auctionEnded) {
+      return 'Sold';
+    } else if (!ad.auctionStarted) {
+      return 'Upcoming';
+    } else {
+      return 'Ongoing';
+    }
   };
 
   return (
@@ -41,7 +54,10 @@ function MediaCard(props) {
               Price: $ {props.ad.currentPrice.$numberDecimal}
             </Typography>
             <Typography variant='body2' color='text.secondary'>
-              Remaining: {Math.floor(parseInt(props.ad.timer) / 60)} minutes
+              Remaining: {secondsToHmsShort(props.ad.timer)}
+            </Typography>
+            <Typography variant='body2' color='text.secondary'>
+              Status: {auctionStatus(props.ad)}
             </Typography>
           </CardContent>
         </CardActionArea>

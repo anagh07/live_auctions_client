@@ -24,13 +24,21 @@ const Board = (props) => {
     <Spinner />
   ) : (
     <div className='ad__board'>
-      {props.ads.map((ad) => {
-        return ad.auctionEnded ? null : (
-          <div className='ad__container' key={ad._id}>
-            <Card ad={ad} key={ad._id} />
-          </div>
-        );
-      })}
+      {props.passedUser
+        ? props.ads.map((ad) => {
+            return (
+              <div className='ad__container' key={ad._id}>
+                <Card ad={ad} key={ad._id} />
+              </div>
+            );
+          })
+        : props.ads.map((ad) => {
+            return ad.auctionEnded ? null : (
+              <div className='ad__container' key={ad._id}>
+                <Card ad={ad} key={ad._id} />
+              </div>
+            );
+          })}
     </div>
   );
 };
