@@ -57,7 +57,7 @@ const Ad = (props) => {
 
   // Check if current user is the owner of ad
   useEffect(() => {
-    if (props.adDetails.owner) {
+    if (props.adDetails.owner && props.auth.user) {
       if (props.adDetails.owner._id === props.auth.user._id) setOwnerAd(true);
       else setOwnerAd(false);
     }
