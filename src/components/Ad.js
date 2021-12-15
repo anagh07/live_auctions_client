@@ -145,6 +145,11 @@ const Ad = (props) => {
     return secondsToHms(props.adDetails.timer);
   };
 
+  const getUTCDate = (dt) => {
+    let isodt = new Date(dt);
+    return isodt.toDateString();
+  };
+
   // Auction status based on the ad-details
   const auctionStatus = () => {
     if (props.adDetails.auctionEnded) {
@@ -183,19 +188,23 @@ const Ad = (props) => {
                 <Typography variant='body2'>{props.adDetails.description}</Typography>
                 <Divider variant='middle' sx={{ margin: '.5rem' }} />
 
-                <Typography variant='h6'>Auction</Typography>
+                <Typography variant='h6'>Info</Typography>
+                <Typography variant='body2'>
+                  Posted on: {getUTCDate(props.adDetails.createdAt)}
+                </Typography>
                 <Typography variant='body1'>
                   Seller: {props.adDetails.owner.username}
                 </Typography>
                 <Typography variant='body1'>
                   Base price: {props.adDetails.basePrice.$numberDecimal}
                 </Typography>
+                <Divider variant='middle' sx={{ margin: '.5rem' }} />
+
+                <Typography variant='h6'>Auction</Typography>
+                <Typography variant='body1'>Status: {auctionStatus()}</Typography>
                 <Typography variant='body1'>
                   Bids: {props.adDetails.bids.length}
                 </Typography>
-                <Typography variant='body1'>Status: {auctionStatus()}</Typography>
-                <Divider variant='middle' sx={{ margin: '.5rem' }} />
-
                 <Typography variant='body1'>
                   Time remaining: {getTimeRemaining()}
                 </Typography>
