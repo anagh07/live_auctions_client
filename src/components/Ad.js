@@ -189,7 +189,7 @@ const Ad = (props) => {
                 <Divider variant='middle' sx={{ margin: '.5rem' }} />
 
                 <Typography variant='h6'>Info</Typography>
-                <Typography variant='body2'>
+                <Typography variant='body1'>
                   Posted on: {getUTCDate(props.adDetails.createdAt)}
                 </Typography>
                 <Typography variant='body1'>

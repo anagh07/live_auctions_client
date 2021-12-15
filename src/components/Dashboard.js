@@ -27,7 +27,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     props.getUserPurchasedAds();
-  }, []);
+  }, [props.loading]);
 
   // Check if user is logged
   if (!props.isAuth) {
