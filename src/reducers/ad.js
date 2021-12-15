@@ -33,13 +33,25 @@ export default function (state = initialState, action) {
         ads: payload,
       };
 
-    case UPDATE_AD_DETAILS:
     case LOAD_AD_DETAILS:
       return {
         ...state,
         adDetails: payload,
         loading: false,
       };
+
+    case UPDATE_AD_DETAILS:
+      if (payload._id === state.adDetails._id) {
+        return {
+          ...state,
+          adDetails: payload,
+          loading: false,
+        };
+      } else {
+        return {
+          ...state,
+        };
+      }
 
     case LOAD_HIGHEST_BID:
       return {
@@ -90,14 +102,23 @@ export default function (state = initialState, action) {
       return {
         ...state,
         ads: updatedList,
+        loading: false,
       };
 
     case UPDATE_TIMER:
-      return {
-        ...state,
-        adDetails: { ...state.adDetails, timer: payload },
-        loading: false,
-      };
+      console.log(state.adDetails._id);
+      console.log(payload);
+      if (state.adDetails._id === payload._id) {
+        return {
+          ...state,
+          adDetails: { ...state.adDetails, timer: payload.timer },
+          loading: false,
+        };
+      } else {
+        return {
+          ...state,
+        };
+      }
 
     default:
       return state;
