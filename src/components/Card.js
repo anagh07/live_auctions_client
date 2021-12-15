@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Card from '@mui/material/Card';
 import { Link, Navigate } from 'react-router-dom';
+import openSocket from 'socket.io-client';
 // Actions
 import { loadAdDetails } from '../actions/ad';
 // MUI Components
@@ -11,7 +12,6 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 // Files
 import imagePlaceholder from '../images/no-image-icon.png';
-import { adArea } from './css/adStyles';
 import { secondsToHmsShort } from '../utils/secondsToHms';
 
 function MediaCard(props) {
@@ -20,7 +20,7 @@ function MediaCard(props) {
   };
 
   // Auction status based on the ad-details
-  const auctionStatus = (ad) => {
+  const updateAuctionStatus = (ad) => {
     if (ad.auctionEnded) {
       return 'Sold';
     } else if (!ad.auctionStarted) {
@@ -57,7 +57,7 @@ function MediaCard(props) {
               Remaining: {secondsToHmsShort(props.ad.timer)}
             </Typography>
             <Typography variant='body2' color='text.secondary'>
-              Status: {auctionStatus(props.ad)}
+              Status: {updateAuctionStatus(props.ad)}
             </Typography>
           </CardContent>
         </CardActionArea>

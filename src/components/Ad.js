@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
+import openSocket from 'socket.io-client';
 // Actions
-import { loadAdDetails, loadHighestBid, placeBid, startAuction } from '../actions/ad';
-import { setAlert } from '../actions/alert';
+import {
+  loadAdDetails,
+  loadHighestBid,
+  placeBid,
+  startAuction,
+  updateTimer,
+  updateAdDetails,
+} from '../actions/ad';
+import { setAlert, clearAlerts } from '../actions/alert';
 // MUI Components
 import { Paper, Box, Typography, Divider, TextField, Button } from '@mui/material';
 // Project components
@@ -44,6 +52,7 @@ const Ad = (props) => {
   };
 
   useEffect(() => {
+    props.clearAlerts();
     props.loadAdDetails(params.adId);
   }, [params.adId]);
 
@@ -53,7 +62,35 @@ const Ad = (props) => {
 
   useEffect(() => {
     updateBidButtonStatus(bidPrice);
-  }, [bidPrice]);
+  }, [bidPrice, props.adDetails.auctionEnded]);
+
+  // Socket io
+  useEffect(() => {
+    const socket = openSocket(process.env.REACT_APP_API_BASE_URL);
+    // Auction start alert
+    socket.on('auctionStarted', (res) => {
+      console.log(res);
+      props.updateAdDetails(res.data);
+      props.clearAlerts();
+      if (res.action === 'started') props.setAlert('Auction started!', 'info');
+    });
+    // Auction end alert
+    socket.on('auctionEnded', (res) => {
+      console.log(res);
+      props.updateAdDetails(res.data);
+      props.clearAlerts();
+      props.setAlert('Auction ended.', 'info');
+    });
+    // Bid posted
+    socket.on('bidPosted', (res) => {
+      props.loadHighestBid(res.data._id);
+      props.updateAdDetails(res.data);
+    });
+    // Timer update
+    socket.on('timer', (res) => {
+      props.updateTimer(res.data);
+    });
+  }, []);
 
   // Check if current user is the owner of ad
   useEffect(() => {
@@ -96,7 +133,6 @@ const Ad = (props) => {
     e.preventDefault();
     // Place bid
     props.placeBid(props.adDetails._id, bidPrice);
-    props.setAlert('Bid submitted', 'success');
   };
 
   const handleStartAuction = (e) => {
@@ -234,4 +270,7 @@ export default connect(mapStateToProps, {
   placeBid,
   startAuction,
   setAlert,
+  clearAlerts,
+  updateTimer,
+  updateAdDetails,
 })(Ad);

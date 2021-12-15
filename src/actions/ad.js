@@ -7,6 +7,10 @@ import {
   POST_AD,
   START_AUCTION,
   USER_PURCHASED_LOADED,
+  AD_POSTED_BY_OTHER,
+  UPDATE_AD_IN_AD_LIST,
+  UPDATE_TIMER,
+  UPDATE_AD_DETAILS,
 } from './types';
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
@@ -65,6 +69,14 @@ export const loadAdDetails = (adId) => async (dispatch) => {
   }
 };
 
+// Set ad details
+export const setAdDetails = (ad) => (dispatch) => {
+  dispatch({
+    type: LOAD_AD_DETAILS,
+    payload: ad,
+  });
+};
+
 // Current highest bid on ad
 export const loadHighestBid = (adId) => async (dispatch) => {
   const url = `${process.env.REACT_APP_API_BASE_URL}/bid/${adId}`;
@@ -99,6 +111,7 @@ export const placeBid = (adId, bidAmount) => async (dispatch) => {
       type: PLACE_BID,
       payload: { adDetails: res.data, highestBid: res2.data[0] },
     });
+    setAlert('Bid submitted', 'success');
   } catch (error) {
     // Get errors array sent by api
     if (!error.response) {
@@ -167,7 +180,7 @@ export const getUserPurchasedAds = () => async (dispatch) => {
   const url = `${process.env.REACT_APP_API_BASE_URL}/user/products/purchased`;
   try {
     const res = await axios.get(url);
-    console.log(res.data);
+
     dispatch({
       type: USER_PURCHASED_LOADED,
       payload: res.data,
@@ -184,4 +197,36 @@ export const getUserPurchasedAds = () => async (dispatch) => {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'error', 50000)));
     }
   }
+};
+
+// Load ads purchased by user
+export const adPostedByOther = (ad) => (dispatch) => {
+  dispatch({
+    type: AD_POSTED_BY_OTHER,
+    payload: ad,
+  });
+};
+
+// Update ad in ad list
+export const updateAdInList = (ad) => (dispatch) => {
+  dispatch({
+    type: UPDATE_AD_IN_AD_LIST,
+    payload: ad,
+  });
+};
+
+// Update current ad (adDetails)
+export const updateTimer = (timer) => (dispatch) => {
+  dispatch({
+    type: UPDATE_TIMER,
+    payload: timer,
+  });
+};
+
+// Update current ad (adDetails)
+export const updateAdDetails = (ad) => (dispatch) => {
+  dispatch({
+    type: UPDATE_AD_DETAILS,
+    payload: ad,
+  });
 };

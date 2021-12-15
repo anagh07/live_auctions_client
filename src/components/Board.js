@@ -1,18 +1,35 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import openSocket from 'socket.io-client';
 // Styling
 import './css/board.css';
 // Actions
-import { loadAds } from '../actions/ad';
+import { loadAds, adPostedByOther, updateAdInList } from '../actions/ad';
+import { setAlert } from '../actions/alert';
 // Components
 import Spinner from './Spinner';
 import Card from './Card';
 
 const Board = (props) => {
   useEffect(() => {
-    if (props.passedUser) props.loadAds(props.passedUser);
-    else props.loadAds();
+    if (props.passedUser) {
+      props.loadAds(props.passedUser);
+    } else {
+      props.loadAds();
+      const socket = openSocket(process.env.REACT_APP_API_BASE_URL);
+      // when new ad is added
+      socket.on('addAd', (data) => {
+        props.setAlert('New ads available', 'info');
+      });
+      // when auction starts/ends
+      socket.on('auctionStarted', (res) => {
+        props.updateAdInList(res.data);
+      });
+      socket.on('auctionEnded', (res) => {
+        props.updateAdInList(res.data);
+      });
+    }
   }, []);
 
   // Check if user is logged
@@ -49,4 +66,9 @@ const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { loadAds })(Board);
+export default connect(mapStateToProps, {
+  loadAds,
+  adPostedByOther,
+  setAlert,
+  updateAdInList,
+})(Board);
