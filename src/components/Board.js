@@ -6,7 +6,7 @@ import openSocket from 'socket.io-client';
 import './css/board.css';
 // Actions
 import { loadAds, adPostedByOther, updateAdInList } from '../actions/ad';
-import { setAlert } from '../actions/alert';
+import { setAlert, clearAlerts } from '../actions/alert';
 // Components
 import Spinner from './Spinner';
 import Card from './Card';
@@ -20,7 +20,11 @@ const Board = (props) => {
       const socket = openSocket(process.env.REACT_APP_API_BASE_URL);
       // when new ad is added
       socket.on('addAd', (data) => {
-        props.setAlert('New ads available', 'info');
+        console.log('add ad');
+        if (data.ad.owner.toString() !== props.user._id.toString()) {
+          props.clearAlerts();
+          props.setAlert('New ads available', 'info');
+        }
       });
       // when auction starts/ends
       socket.on('auctionStarted', (res) => {
@@ -64,6 +68,7 @@ const mapStateToProps = (state) => ({
   ads: state.ad.ads,
   loading: state.auth.loading,
   isAuth: state.auth.isAuthenticated,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, {
@@ -71,4 +76,5 @@ export default connect(mapStateToProps, {
   adPostedByOther,
   setAlert,
   updateAdInList,
+  clearAlerts,
 })(Board);

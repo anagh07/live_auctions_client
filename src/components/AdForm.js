@@ -55,7 +55,7 @@ const AdForm = (props) => {
       return props.setAlert('Base price required!');
     }
     if (form.duration == 0) {
-      return props.setAlert('Duration required!');
+      setForm({ ...form, duration: 300 });
     }
     await props.postAd(form);
     navigate('/');
