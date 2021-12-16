@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import openSocket from 'socket.io-client';
 // Actions
 import {
@@ -36,6 +36,7 @@ const Ad = (props) => {
   const [bidButton, setBidButton] = useState(true);
   const [ownerAd, setOwnerAd] = useState(false);
   const [startButton, setStartButton] = useState(true);
+  const [adSocketState, setAdSocketState] = useState(null);
   const navigate = useNavigate();
 
   // Bid button status
@@ -64,33 +65,44 @@ const Ad = (props) => {
     updateBidButtonStatus(bidPrice);
   }, [bidPrice, props.adDetails.auctionEnded]);
 
-  // Socket io
+  // For ad rooms
   useEffect(() => {
-    const socket = openSocket(process.env.REACT_APP_API_BASE_URL);
-    // Auction start alert
-    socket.on('auctionStarted', (res) => {
+    const adSocket = openSocket(process.env.REACT_APP_API_BASE_URL, {
+      path: '/socket/adpage',
+    });
+    // User enters add page
+    adSocket.emit('joinAd', { ad: params.adId.toString() });
+    // Auction is started
+    adSocket.on('auctionStarted', (res) => {
       console.log(res);
       props.updateAdDetails(res.data);
       props.clearAlerts();
       if (res.action === 'started') props.setAlert('Auction started!', 'info');
     });
-    // Auction end alert
-    socket.on('auctionEnded', (res) => {
+    // Auction is ended
+    adSocket.on('auctionEnded', (res) => {
       console.log(res);
       props.updateAdDetails(res.data);
       props.clearAlerts();
       props.setAlert('Auction ended.', 'info');
     });
-    // Bid posted
-    socket.on('bidPosted', (res) => {
+    // Timer
+    adSocket.on('timer', (res) => {
+      props.updateTimer(res.data);
+    });
+    // Bid is posted
+    adSocket.on('bidPosted', (res) => {
+      console.log('bidposted');
       props.loadHighestBid(res.data._id);
       props.updateAdDetails(res.data);
     });
-    // Timer update
-    socket.on('timer', (res) => {
-      props.updateTimer(res.data);
-    });
-  }, []);
+
+    return () => {
+      adSocket.emit('leaveAd', { ad: params.adId.toString() });
+      adSocket.off();
+    };
+    // setAdSocketState(adSocket);
+  }, [params.adId]);
 
   // Check if current user is the owner of ad
   useEffect(() => {
