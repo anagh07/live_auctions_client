@@ -20,7 +20,6 @@ const Board = (props) => {
       const socket = openSocket(process.env.REACT_APP_API_BASE_URL);
       // when new ad is added
       socket.on('addAd', (data) => {
-        console.log('add ad');
         if (data.ad.owner.toString() !== props.user._id.toString()) {
           props.clearAlerts();
           props.setAlert('New ads available', 'info');
