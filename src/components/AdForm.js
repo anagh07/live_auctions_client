@@ -31,7 +31,7 @@ const AdForm = (props) => {
     productName: '',
     description: '',
     basePrice: 0,
-    duration: 0,
+    duration: 300,
     category: '',
     image: '',
   });
