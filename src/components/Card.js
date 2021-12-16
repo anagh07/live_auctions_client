@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Card from '@mui/material/Card';
-import { Link, Navigate } from 'react-router-dom';
-import openSocket from 'socket.io-client';
+import { Link } from 'react-router-dom';
 // Actions
 import { loadAdDetails } from '../actions/ad';
 // MUI Components
@@ -40,14 +39,16 @@ function MediaCard(props) {
       to={`/ads/${props.ad._id}`}
       style={{ textDecoration: 'none' }}
     >
-      <Card style={{ width: 240, height: 330 }}>
+      <Card style={props.cardStyle}>
         <CardActionArea>
-          <CardMedia
-            component='img'
-            height='180'
-            src={props.ad.image ? props.ad.image : imagePlaceholder}
-            alt='green iguana'
-          />
+          {!props.dashCard && (
+            <CardMedia
+              component='img'
+              height='180'
+              src={props.ad.image ? props.ad.image : imagePlaceholder}
+              alt='green iguana'
+            />
+          )}
           <CardContent>
             <Typography gutterBottom variant='h6' component='div'>
               {props.ad.productName}

@@ -4,15 +4,7 @@ import { connect } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Fragment } from 'react';
 // MUI
-import {
-  Box,
-  Paper,
-  FormControl,
-  TextField,
-  Button,
-  InputLabel,
-  Typography,
-} from '@mui/material';
+import { Box, Paper, TextField, Button, InputLabel, Typography } from '@mui/material';
 // Files
 import Alert from './Alert';
 import {
@@ -51,10 +43,10 @@ const AdForm = (props) => {
     if (form.productName === '') {
       return props.setAlert('Product name required!');
     }
-    if (form.basePrice == 0) {
+    if (form.basePrice.toString() === '0') {
       return props.setAlert('Base price required!');
     }
-    if (form.duration == 0) {
+    if (form.duration.toString() === '0') {
       setForm({ ...form, duration: 300 });
     }
     await props.postAd(form);

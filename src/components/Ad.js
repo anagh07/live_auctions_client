@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import openSocket from 'socket.io-client';
 // Actions
 import {
@@ -36,7 +36,6 @@ const Ad = (props) => {
   const [bidButton, setBidButton] = useState(true);
   const [ownerAd, setOwnerAd] = useState(false);
   const [startButton, setStartButton] = useState(true);
-  const [adSocketState, setAdSocketState] = useState(null);
   const navigate = useNavigate();
 
   // Bid button status
@@ -59,7 +58,7 @@ const Ad = (props) => {
 
   useEffect(() => {
     props.loadHighestBid(params.adId);
-  }, []);
+  }, [params.adId]);
 
   useEffect(() => {
     updateBidButtonStatus(bidPrice);

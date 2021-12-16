@@ -2,7 +2,7 @@ import { SET_ALERT, REMOVE_ALERT, CLEAR_ALERTS } from '../actions/types';
 
 const initialState = []; // [ { msg: '', type: '', id: '' } ]
 
-export default function (state = initialState, action) {
+export default function alertReduce(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {

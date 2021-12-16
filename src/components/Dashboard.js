@@ -9,18 +9,19 @@ import {
   Table,
   TableRow,
   TableCell,
-  TableHead,
   TableBody,
-  Button,
 } from '@mui/material';
 // Style files
 import { boxStyle, paperStyle } from './css/adStyles';
 import { profileTableStyle, tableCellStyle } from './css/dashStyle';
+
 // Project files
 import Spinner from './Spinner';
-import Board from './Board';
+import DashboardAdList from './DashboardAdList';
+import LoadingDisplay from './LoadingDisplay';
 // Actions
 import { getUserPurchasedAds } from '../actions/ad';
+import DashPurchasedList from './DashPurchasedList';
 
 const Dashboard = (props) => {
   const navigate = useNavigate();
@@ -34,17 +35,9 @@ const Dashboard = (props) => {
     navigate('/login');
   }
 
-  const getGMTTime = (time) => {
-    const dateTime = new Date(time);
-    console.log(dateTime.toUTCString());
-    return dateTime.toUTCString();
-  };
+  
 
-  const handlePurchasedDetails = (adId) => {
-    navigate('/ads/' + adId);
-  };
-
-  return props.loading || props.purchasedLoading ? (
+  return props.loading ? (
     <Spinner />
   ) : (
     <Fragment>
@@ -95,45 +88,18 @@ const Dashboard = (props) => {
       <Box sx={boxStyle}>
         <Paper sx={paperStyle}>
           <Typography variant='h5'>My ads</Typography>
-          <Board passedUser={props.user._id} />
+          <DashboardAdList />
         </Paper>
       </Box>
 
       <Box sx={boxStyle}>
         <Paper sx={paperStyle}>
           <Typography variant='h5'>My purchases</Typography>
-          <Box sx={profileTableStyle}>
-            <Table sx={{ width: '70%', minWidth: 650 }} aria-label='simple table'>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Product name</TableCell>
-                  <TableCell align='right'>Price</TableCell>
-                  <TableCell align='right'>Date</TableCell>
-                  <TableCell align='right'>Details</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {props.purchased.map((ad) => (
-                  <TableRow key={ad._id}>
-                    <TableCell>{ad.productName}</TableCell>
-                    <TableCell align='right'>${ad.currentPrice.$numberDecimal}</TableCell>
-                    <TableCell align='right'>{getGMTTime(ad.updatedAt)}</TableCell>
-                    <TableCell align='right'>
-                      <Button
-                        size='small'
-                        variant='outlined'
-                        onClick={(e) => {
-                          handlePurchasedDetails(ad._id);
-                        }}
-                      >
-                        Details
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
+          {props.purchasedLoading ? (
+            <LoadingDisplay />
+          ) : (
+            <DashPurchasedList ads={props.purchased} />
+          )}
         </Paper>
       </Box>
     </Fragment>

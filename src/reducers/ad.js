@@ -22,7 +22,7 @@ const initialState = {
   purchased: [],
 };
 
-export default function (state = initialState, action) {
+export default function adReduce(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
@@ -96,7 +96,7 @@ export default function (state = initialState, action) {
 
     case UPDATE_AD_IN_AD_LIST:
       let updatedList = state.ads.map((ad) => {
-        if (ad._id == payload._id) return payload;
+        if (ad._id.toString() === payload._id.toString()) return payload;
         else return ad;
       });
       return {

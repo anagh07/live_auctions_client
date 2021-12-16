@@ -1,9 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import openSocket from 'socket.io-client';
+// MUI
+import { Button, Box, ButtonGroup } from '@mui/material';
 // Styling
 import './css/board.css';
+import {
+  adAreaStyle,
+  boardCardStyle,
+  boardStyle,
+  paginationStyle,
+} from './css/boardStyle';
 // Actions
 import { loadAds, adPostedByOther, updateAdInList } from '../actions/ad';
 import { setAlert, clearAlerts } from '../actions/alert';
@@ -12,6 +20,9 @@ import Spinner from './Spinner';
 import Card from './Card';
 
 const Board = (props) => {
+  const [pageNumber, setPageNumber] = useState(1);
+  const [adPerPage] = useState(6);
+
   useEffect(() => {
     if (props.passedUser) {
       props.loadAds(props.passedUser);
@@ -40,26 +51,60 @@ const Board = (props) => {
     return <Navigate to='/login' />;
   }
 
+  // Pagination
+  let lastAdIndex = pageNumber * adPerPage;
+  let firstAdIndex = lastAdIndex - adPerPage;
+  // Page numbers for buttons
+  let pageNumbers = [];
+  const num = Math.ceil(props.ads.length / adPerPage);
+  for (let i = 1; i <= num; i++) {
+    pageNumbers.push(i);
+  }
+  // When page number button is clicked
+  const clickPageNumberButton = (num) => {
+    setPageNumber(num);
+  };
+
   return props.loading ? (
     <Spinner />
   ) : (
-    <div className='ad__board'>
-      {props.passedUser
-        ? props.ads.map((ad) => {
+    <Box sx={boardStyle}>
+      <Box sx={adAreaStyle}>
+        {props.ads.slice(firstAdIndex, lastAdIndex).map((ad) => {
+          return ad.auctionEnded ? null : (
+            <div className='ad__container' key={ad._id}>
+              <Card ad={ad} key={ad._id} dashCard={false} cardStyle={boardCardStyle} />
+            </div>
+          );
+        })}
+      </Box>
+      <Box sx={paginationStyle}>
+        <ButtonGroup variant='outlined' size='small'>
+          <Button
+            disabled={pageNumber === 1}
+            onClick={(e) => clickPageNumberButton(pageNumber - 1)}
+          >
+            Prev
+          </Button>
+          {pageNumbers.map((num) => {
             return (
-              <div className='ad__container' key={ad._id}>
-                <Card ad={ad} key={ad._id} />
-              </div>
-            );
-          })
-        : props.ads.map((ad) => {
-            return ad.auctionEnded ? null : (
-              <div className='ad__container' key={ad._id}>
-                <Card ad={ad} key={ad._id} />
-              </div>
+              <Button
+                disabled={pageNumber === num}
+                onClick={(e) => clickPageNumberButton(num)}
+              >
+                {num}
+              </Button>
             );
           })}
-    </div>
+          <Button
+            disabled={pageNumber === pageNumbers[pageNumbers.length - 1]}
+            onClick={(e) => clickPageNumberButton(pageNumber + 1)}
+          >
+            Next
+          </Button>
+        </ButtonGroup>
+      </Box>
+    </Box>
   );
 };
 

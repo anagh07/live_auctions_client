@@ -160,6 +160,7 @@ export const startAuction = (adId) => async (dispatch) => {
 
     dispatch({
       type: START_AUCTION,
+      payload: res,
     });
   } catch (error) {
     // Get errors array sent by api

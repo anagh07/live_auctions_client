@@ -4,7 +4,6 @@ import { Navigate } from 'react-router-dom';
 // Styling
 import './css/home.css';
 // Components
-import Nav from './Nav';
 import Board from './Board';
 import Alert from './Alert';
 
