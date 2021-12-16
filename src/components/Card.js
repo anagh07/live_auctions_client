@@ -21,8 +21,10 @@ function MediaCard(props) {
 
   // Auction status based on the ad-details
   const updateAuctionStatus = (ad) => {
-    if (ad.auctionEnded) {
+    if (ad.sold) {
       return 'Sold';
+    } else if (ad.auctionEnded) {
+      return 'Ended, not-sold';
     } else if (!ad.auctionStarted) {
       return 'Upcoming';
     } else {

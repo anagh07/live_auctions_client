@@ -81,10 +81,15 @@ const Ad = (props) => {
     });
     // Auction is ended
     adSocket.on('auctionEnded', (res) => {
-      console.log(res);
-      props.updateAdDetails(res.data);
-      props.clearAlerts();
-      props.setAlert('Auction ended.', 'info');
+      if (res.action === 'sold') {
+        props.updateAdDetails(res.ad);
+        props.clearAlerts();
+        props.setAlert(`Auction ended, item sold to ${res.winner.username}!`, 'info');
+      } else {
+        props.updateAdDetails(res.data);
+        props.clearAlerts();
+        props.setAlert('Item not sold', 'info');
+      }
     });
     // Timer
     adSocket.on('timer', (res) => {
@@ -164,8 +169,10 @@ const Ad = (props) => {
 
   // Auction status based on the ad-details
   const auctionStatus = () => {
-    if (props.adDetails.auctionEnded) {
+    if (props.adDetails.sold) {
       return 'Sold';
+    } else if (props.adDetails.auctionEnded) {
+      return 'Ended, not-sold';
     } else if (!props.adDetails.auctionStarted) {
       return 'Upcoming';
     } else {
