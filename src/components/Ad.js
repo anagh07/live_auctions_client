@@ -17,6 +17,7 @@ import { Paper, Box, Typography, Divider, TextField, Button } from '@mui/materia
 // Project components
 import Alert from './Alert';
 import Spinner from './Spinner';
+import LoadingDisplay from './LoadingDisplay';
 import imagePlaceholder from '../images/no-image-icon.png';
 import {
   boxStyle,

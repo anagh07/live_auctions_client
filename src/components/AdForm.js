@@ -1,5 +1,5 @@
 // max character for prod name 15 chars
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -26,7 +26,7 @@ import {
 import LoadingDisplay from './LoadingDisplay';
 // Actions
 import { postAd } from '../actions/ad';
-import { setAlert } from '../actions/alert';
+import { setAlert, clearAlerts } from '../actions/alert';
 
 const AdForm = (props) => {
   const [form, setForm] = useState({
@@ -39,8 +39,15 @@ const AdForm = (props) => {
   });
   const [file, setFile] = useState('');
   const [fileName, setFileName] = useState('Choose your image file...');
+  const [fileValid, setFileValid] = useState(true);
   const [uploading, setUploading] = useState(false);
   let navigate = useNavigate();
+
+  useEffect(() => {
+    return () => {
+      props.clearAlerts();
+    };
+  }, []);
 
   const handleFormChange = (e) => {
     e.preventDefault();
@@ -62,24 +69,42 @@ const AdForm = (props) => {
     if (form.duration.toString() === '0') {
       setForm({ ...form, duration: 300 });
     }
-    if (file === '') {
-      // submit without photo
-      await props.postAd(form);
-      navigate('/');
+    if (!fileValid) {
+      // if selected file is not image/exceeds size limit
+      props.setAlert('Image file not valid!', 'error');
     } else {
-      // with photo
-      const imagePath = await uploadImage();
-      console.log(imagePath);
-      if (imagePath) {
-        await props.postAd({ ...form, image: imagePath });
+      if (file === '') {
+        // submit without photo
+        await props.postAd(form);
         navigate('/');
+      } else {
+        // with photo
+        const imagePath = await uploadImage();
+        console.log(imagePath);
+        if (imagePath) {
+          await props.postAd({ ...form, image: imagePath });
+          navigate('/');
+        }
       }
     }
   };
 
   const fileSelected = (e) => {
-    setFile(e.target.files[0]);
-    setFileName(e.target.files[0].name);
+    let filesize = (e.target.files[0].size / (1024 * 1024)).toFixed(3);
+    let fileType = e.target.files[0].type.toString().toLowerCase();
+    if (fileType !== 'image/jpeg' && fileType !== 'image/png') {
+      props.setAlert('Image must be of type JPEG or PNG');
+      setFile('');
+      setFileValid(false);
+    } else if (filesize > 3) {
+      props.setAlert('Image size must be less than 3 MB', 'error');
+      setFile('');
+      setFileValid(false);
+    } else {
+      setFileValid(true);
+      setFile(e.target.files[0]);
+      setFileName(e.target.files[0].name);
+    }
   };
 
   const uploadImage = async () => {
@@ -202,6 +227,9 @@ const AdForm = (props) => {
                 onChange={fileSelected}
                 fullWidth
               />
+              {file === '' && (
+                <Typography variant='caption'>JPG or PNG maximum 3 MB</Typography>
+              )}
               {/* <label htmlFor='imageFile'>{fileName}</label> */}
             </Box>
           )}
@@ -224,4 +252,4 @@ const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { postAd, setAlert })(AdForm);
+export default connect(mapStateToProps, { postAd, setAlert, clearAlerts })(AdForm);
