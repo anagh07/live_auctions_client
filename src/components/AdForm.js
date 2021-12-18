@@ -1,10 +1,19 @@
 // max character for prod name 15 chars
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Fragment } from 'react';
 // MUI
-import { Box, Paper, TextField, Button, InputLabel, Typography } from '@mui/material';
+import {
+  Box,
+  Paper,
+  TextField,
+  Button,
+  InputLabel,
+  Typography,
+  Input,
+} from '@mui/material';
 // Files
 import Alert from './Alert';
 import {
@@ -14,6 +23,7 @@ import {
   formTextField,
   formSubmitButtonContainer,
 } from './css/adStyles';
+import LoadingDisplay from './LoadingDisplay';
 // Actions
 import { postAd } from '../actions/ad';
 import { setAlert } from '../actions/alert';
@@ -27,6 +37,9 @@ const AdForm = (props) => {
     category: '',
     image: '',
   });
+  const [file, setFile] = useState('');
+  const [fileName, setFileName] = useState('Choose your image file...');
+  const [uploading, setUploading] = useState(false);
   let navigate = useNavigate();
 
   const handleFormChange = (e) => {
@@ -49,8 +62,42 @@ const AdForm = (props) => {
     if (form.duration.toString() === '0') {
       setForm({ ...form, duration: 300 });
     }
-    await props.postAd(form);
-    navigate('/');
+    if (file === '') {
+      // submit without photo
+      await props.postAd(form);
+      navigate('/');
+    } else {
+      // with photo
+      const imagePath = await uploadImage();
+      console.log(imagePath);
+      if (imagePath) {
+        await props.postAd({ ...form, image: imagePath });
+        navigate('/');
+      }
+    }
+  };
+
+  const fileSelected = (e) => {
+    setFile(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+  };
+
+  const uploadImage = async () => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/upload/image`,
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+      return res.data.imagePath;
+    } catch (error) {
+      console.log(error);
+      setUploading(false);
+      props.setAlert('File upload failed', 'error');
+    }
   };
 
   // Check if user is logged
@@ -68,7 +115,7 @@ const AdForm = (props) => {
 
           {/* Form */}
           <Box sx={formComponent}>
-            <InputLabel>Product Name</InputLabel>
+            <InputLabel>Product Name*</InputLabel>
             <TextField
               name='productName'
               onChange={(e) => {
@@ -78,6 +125,7 @@ const AdForm = (props) => {
               sx={formTextField}
             ></TextField>
           </Box>
+
           <Box sx={formComponent}>
             <InputLabel>Description</InputLabel>
             <TextField
@@ -92,7 +140,7 @@ const AdForm = (props) => {
           </Box>
 
           <Box sx={formComponent}>
-            <InputLabel>Base Price</InputLabel>
+            <InputLabel>Base Price*</InputLabel>
             <TextField
               name='basePrice'
               onChange={(e) => {
@@ -130,7 +178,7 @@ const AdForm = (props) => {
             ></TextField>
           </Box>
 
-          <Box sx={formComponent}>
+          {/* <Box sx={formComponent}>
             <InputLabel>Image URL</InputLabel>
             <TextField
               name='image'
@@ -141,12 +189,31 @@ const AdForm = (props) => {
               placeholder='Direct image link (jpg/png/jpeg). Can be an imgur direct link.'
               sx={formTextField}
             ></TextField>
-          </Box>
+          </Box> */}
+          {uploading ? (
+            <LoadingDisplay />
+          ) : (
+            <Box sx={formComponent}>
+              <InputLabel>Upload image</InputLabel>
+              <Input
+                name='uploaded_file'
+                type='file'
+                id='imageFile'
+                onChange={fileSelected}
+                fullWidth
+              />
+              {/* <label htmlFor='imageFile'>{fileName}</label> */}
+            </Box>
+          )}
 
           <Box sx={formSubmitButtonContainer}>
-            <Button variant='contained' onClick={(e) => handleSubmit(e)}>
-              Submit
-            </Button>
+            {uploading ? (
+              <LoadingDisplay />
+            ) : (
+              <Button variant='contained' onClick={(e) => handleSubmit(e)}>
+                Submit
+              </Button>
+            )}
           </Box>
         </Paper>
       </Box>

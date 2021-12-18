@@ -91,6 +91,7 @@ const DashPurchasedList = ({ ads }) => {
             {pageNumbers.map((num) => {
               return (
                 <Button
+                  key={num}
                   disabled={pageNumber === num}
                   onClick={(e) => clickPageNumberButton(num)}
                 >

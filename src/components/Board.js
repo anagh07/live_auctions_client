@@ -31,9 +31,14 @@ const Board = (props) => {
       const socket = openSocket(process.env.REACT_APP_API_BASE_URL);
       // when new ad is added
       socket.on('addAd', (data) => {
-        if (data.ad.owner.toString() !== props.user._id.toString()) {
+        console.log(data);
+        if (
+          props.user &&
+          data.ad.owner &&
+          data.ad.owner.toString() !== props.user._id.toString()
+        ) {
           props.clearAlerts();
-          props.setAlert('New ads available', 'info');
+          props.setAlert('New ads available', 'info', 60000);
         }
       });
       // when auction starts/ends
@@ -43,6 +48,13 @@ const Board = (props) => {
       socket.on('auctionEnded', (res) => {
         props.updateAdInList(res.data);
       });
+
+      // disconnect socket when page left
+      return () => {
+        socket.emit('leaveHome');
+        socket.off();
+        props.clearAlerts();
+      };
     }
   }, []);
 
@@ -89,6 +101,7 @@ const Board = (props) => {
           {pageNumbers.map((num) => {
             return (
               <Button
+                key={num}
                 disabled={pageNumber === num}
                 onClick={(e) => clickPageNumberButton(num)}
               >

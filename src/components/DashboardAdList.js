@@ -19,7 +19,6 @@ const DashboardAdList = () => {
       const res = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/user/products/posted`
       );
-      console.log(res.data);
       setAds(res.data);
       setLoading(false);
     };
@@ -64,6 +63,7 @@ const DashboardAdList = () => {
               {pageNumbers.map((num) => {
                 return (
                   <Button
+                    key={num}
                     disabled={pageNumber === num}
                     onClick={(e) => clickPageNumberButton(num)}
                   >
