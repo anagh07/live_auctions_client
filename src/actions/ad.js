@@ -24,7 +24,10 @@ export const loadAds =
       config = { params: { user: userId } };
     }
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/ad`, config);
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/ad?option=notexpired`,
+        config
+      );
 
       dispatch({
         type: LOAD_ADS,
