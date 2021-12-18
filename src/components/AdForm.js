@@ -207,7 +207,7 @@ const AdForm = (props) => {
           )}
 
           <Box sx={formSubmitButtonContainer}>
-            {uploading && (
+            {!uploading && (
               <Button variant='contained' onClick={(e) => handleSubmit(e)}>
                 Submit
               </Button>
