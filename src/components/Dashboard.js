@@ -14,6 +14,8 @@ import {
 // Style files
 import { boxStyle, paperStyle } from './css/adStyles';
 import { profileTableStyle, tableCellStyle } from './css/dashStyle';
+// Actions
+import { clearAlerts } from '../actions/alert';
 
 // Project files
 import Spinner from './Spinner';
@@ -30,12 +32,16 @@ const Dashboard = (props) => {
     props.getUserPurchasedAds();
   }, [props.loading]);
 
+  useEffect(() => {
+    return () => {
+      props.clearAlerts();
+    };
+  }, []);
+
   // Check if user is logged
   if (!props.isAuth) {
     navigate('/login');
   }
-
-  
 
   return props.loading ? (
     <Spinner />
@@ -114,4 +120,4 @@ const mapStateToProps = (state) => ({
   purchasedLoading: state.ad.purchasedLoading,
 });
 
-export default connect(mapStateToProps, { getUserPurchasedAds })(Dashboard);
+export default connect(mapStateToProps, { getUserPurchasedAds, clearAlerts })(Dashboard);
