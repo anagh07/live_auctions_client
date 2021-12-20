@@ -91,9 +91,11 @@ const AdForm = (props) => {
 
   const fileSelected = (e) => {
     let filesize = (e.target.files[0].size / (1024 * 1024)).toFixed(3);
-    let fileType = e.target.files[0].type.toString().toLowerCase();
-    if (fileType !== 'image/jpeg' && fileType !== 'image/png') {
-      props.setAlert('Image must be of type JPEG or PNG');
+    let fileType = e.target.files[0].type.toString();
+    let regex = /^image\/(png|jpg|jpeg|gif)$/;
+    // if (fileType !== 'image/jpeg' && fileType !== 'image/png') {
+    if (!regex.test(fileType)) {
+      props.setAlert('Image must be of type JPEG, PNG or GIF');
       setFile('');
       setFileValid(false);
     } else if (filesize > 3) {
@@ -228,7 +230,7 @@ const AdForm = (props) => {
                 fullWidth
               />
               {file === '' && (
-                <Typography variant='caption'>JPG or PNG maximum 3 MB</Typography>
+                <Typography variant='caption'>jpg, png or gif maximum 3 MB</Typography>
               )}
               {/* <label htmlFor='imageFile'>{fileName}</label> */}
             </Box>
