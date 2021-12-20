@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button, Link } from '@mui/material';
 // Files
 import './css/nav.css';
-import logo from '../images/auctionslogo3.png';
+import logo from '../images/nav-bar-banner.png';
 // Actions
 import { logout } from '../actions/auth';
 
