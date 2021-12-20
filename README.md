@@ -54,5 +54,5 @@ Hosting:
 </p>
 
 # Notes on using the website
-Project is hosted <a href="https://bug-tracker-6c802.web.app/"><strong>here</strong></a>
+Project is hosted <a href="https://hopeful-kare-e8dde9.netlify.app/"><strong>here</strong></a>
 - If you do not want to register, press the skip button during login. This will log you in as a test user (test@test.com).
