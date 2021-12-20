@@ -29,7 +29,9 @@ const Dashboard = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    props.getUserPurchasedAds();
+    if (props.isAuth) {
+      props.getUserPurchasedAds();
+    }
   }, [props.loading]);
 
   useEffect(() => {
