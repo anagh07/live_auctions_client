@@ -2,6 +2,7 @@ import {
   POST_AD,
   LOAD_ADS,
   LOAD_AD_DETAILS,
+  LOAD_AD_IMAGE,
   LOAD_HIGHEST_BID,
   PLACE_BID,
   START_AUCTION,
@@ -10,16 +11,21 @@ import {
   UPDATE_AD_IN_AD_LIST,
   UPDATE_TIMER,
   UPDATE_AD_DETAILS,
+  CLEAR_AD_IMAGE,
+  IMAGE_LOADING,
+  CLEAR_AD_DETAILS,
 } from '../actions/types';
 
 const initialState = {
   ads: [],
   loading: true,
+  imageLoading: true,
   adDetails: { currentPrice: { $numberDecimal: 0 } },
   loadingHighestBid: true,
   highestBid: { user: { username: '' } },
   purchasedLoading: true,
   purchased: [],
+  adImage: null,
 };
 
 export default function adReduce(state = initialState, action) {
@@ -37,6 +43,32 @@ export default function adReduce(state = initialState, action) {
       return {
         ...state,
         adDetails: payload,
+        loading: false,
+      };
+
+    case CLEAR_AD_DETAILS:
+      return {
+        ...state,
+        adDetails: { currentPrice: { $numberDecimal: 0 } },
+      };
+
+    case LOAD_AD_IMAGE:
+      return {
+        ...state,
+        adImage: payload,
+        imageLoading: false,
+      };
+
+    case IMAGE_LOADING:
+      return {
+        ...state,
+        imageLoading: true,
+      };
+
+    case CLEAR_AD_IMAGE:
+      return {
+        ...state,
+        adImage: null,
         loading: false,
       };
 

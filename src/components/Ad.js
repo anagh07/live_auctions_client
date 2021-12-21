@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import openSocket from 'socket.io-client';
 // Actions
 import {
   loadAdDetails,
+  loadAdImage,
   loadHighestBid,
   placeBid,
   startAuction,
   updateTimer,
   updateAdDetails,
+  clearAdImage,
+  setImageLoadingStatus,
+  clearAdDetails,
 } from '../actions/ad';
 import { setAlert, clearAlerts } from '../actions/alert';
 // MUI Components
@@ -54,8 +58,15 @@ const Ad = (props) => {
 
   useEffect(() => {
     props.clearAlerts();
+    props.setImageLoadingStatus();
     props.loadAdDetails(params.adId);
   }, [params.adId]);
+
+  useEffect(() => {
+    if (props.adDetails.image) {
+      props.loadAdImage(props.adDetails.image);
+    }
+  }, [props.adDetails.image]);
 
   useEffect(() => {
     props.loadHighestBid(params.adId);
@@ -105,6 +116,8 @@ const Ad = (props) => {
     return () => {
       adSocket.emit('leaveAd', { ad: params.adId.toString() });
       adSocket.off();
+      props.clearAdDetails();
+      props.clearAdImage();
     };
     // setAdSocketState(adSocket);
   }, [params.adId]);
@@ -180,102 +193,105 @@ const Ad = (props) => {
     }
   };
 
-  return props.loading ? (
-    <Spinner />
-  ) : (
+  return (
     <div className='ad__page'>
-      {/* <div className='nav__display'>
-        <Nav />
-      </div> */}
-      <Alert />
-      {!props.adDetails.owner ? (
-        <Spinner />
+      {props.loading ? (
+        <LoadingDisplay />
       ) : (
-        <Box sx={boxStyle}>
-          <Paper sx={paperStyle}>
-            <Typography variant='h4'>{props.adDetails.productName}</Typography>
-            <Box sx={adArea}>
-              <Box sx={imageContainer}>
-                <img
-                  src={props.adDetails.image ? props.adDetails.image : imagePlaceholder}
-                  alt={props.adDetails.productName}
-                  style={imageStyle}
-                />
-              </Box>
-              <Box sx={descriptionArea}>
-                <Typography variant='h6'>Description</Typography>
-                <Typography variant='body2'>{props.adDetails.description}</Typography>
-                <Divider variant='middle' sx={{ margin: '.5rem' }} />
-
-                <Typography variant='h6'>Info</Typography>
-                <Typography variant='body1'>
-                  Posted on: {getUTCDate(props.adDetails.createdAt)}
-                </Typography>
-                <Typography variant='body1'>
-                  Seller: {props.adDetails.owner.username}
-                </Typography>
-                <Typography variant='body1'>
-                  Base price: {props.adDetails.basePrice.$numberDecimal}
-                </Typography>
-                <Divider variant='middle' sx={{ margin: '.5rem' }} />
-
-                <Typography variant='h6'>Auction</Typography>
-                <Typography variant='body1'>Status: {auctionStatus()}</Typography>
-                <Typography variant='body1'>
-                  Bids: {props.adDetails.bids.length}
-                </Typography>
-                <Typography variant='body1'>
-                  Time remaining: {getTimeRemaining()}
-                </Typography>
-                <Typography variant='body1'>
-                  Current price: ${props.adDetails.currentPrice.$numberDecimal}
-                </Typography>
-                <Typography variant='body1'>
-                  Current bidder: {props.highestBid && props.highestBid.user.username}
-                </Typography>
-                <Divider variant='middle' sx={{ margin: '.5rem' }} />
-
-                {!ownerAd && (
-                  <Box sx={bidContainer}>
-                    <TextField
-                      label='$'
-                      id='bid-price'
-                      size='small'
-                      onChange={(e) => {
-                        handleBidPriceChange(e);
-                      }}
-                    />
-                    <Box sx={{ height: 'auto' }}>
-                      <Button
-                        variant='contained'
-                        disabled={bidButton}
-                        onClick={(e) => handleSubmitBid(e)}
-                        sx={bidButtonStyle}
-                      >
-                        Place bid
-                      </Button>
-                    </Box>
+        <Fragment>
+          <Alert />
+          {!props.adDetails.owner ? (
+            <LoadingDisplay />
+          ) : (
+            <Box sx={boxStyle}>
+              <Paper sx={paperStyle}>
+                <Typography variant='h4'>{props.adDetails.productName}</Typography>
+                <Box sx={adArea}>
+                  <Box sx={imageContainer}>
+                    {!props.imageLoading && (
+                      <img
+                        src={props.adDetails.image ? props.adImage : imagePlaceholder}
+                        alt={props.adDetails.productName}
+                        style={imageStyle}
+                      />
+                    )}
                   </Box>
-                )}
+                  <Box sx={descriptionArea}>
+                    <Typography variant='h6'>Description</Typography>
+                    <Typography variant='body2'>{props.adDetails.description}</Typography>
+                    <Divider variant='middle' sx={{ margin: '.5rem' }} />
 
-                {ownerAd && (
-                  <Box sx={bidContainer}>
-                    <Box sx={{ height: 'auto' }}>
-                      <Button
-                        variant='contained'
-                        disabled={!startButton}
-                        onClick={(e) => handleStartAuction(e)}
-                        sx={bidButtonStyle}
-                      >
-                        Start Auction
-                      </Button>
-                    </Box>
+                    <Typography variant='h6'>Info</Typography>
+                    <Typography variant='body1'>
+                      Posted on: {getUTCDate(props.adDetails.createdAt)}
+                    </Typography>
+                    <Typography variant='body1'>
+                      Seller: {props.adDetails.owner.username}
+                    </Typography>
+                    <Typography variant='body1'>
+                      Base price: {props.adDetails.basePrice.$numberDecimal}
+                    </Typography>
+                    <Divider variant='middle' sx={{ margin: '.5rem' }} />
+
+                    <Typography variant='h6'>Auction</Typography>
+                    <Typography variant='body1'>Status: {auctionStatus()}</Typography>
+                    <Typography variant='body1'>
+                      Bids: {props.adDetails.bids.length}
+                    </Typography>
+                    <Typography variant='body1'>
+                      Time remaining: {getTimeRemaining()}
+                    </Typography>
+                    <Typography variant='body1'>
+                      Current price: ${props.adDetails.currentPrice.$numberDecimal}
+                    </Typography>
+                    <Typography variant='body1'>
+                      Current bidder: {props.highestBid && props.highestBid.user.username}
+                    </Typography>
+                    <Divider variant='middle' sx={{ margin: '.5rem' }} />
+
+                    {!ownerAd && (
+                      <Box sx={bidContainer}>
+                        <TextField
+                          label='$'
+                          id='bid-price'
+                          size='small'
+                          onChange={(e) => {
+                            handleBidPriceChange(e);
+                          }}
+                        />
+                        <Box sx={{ height: 'auto' }}>
+                          <Button
+                            variant='contained'
+                            disabled={bidButton}
+                            onClick={(e) => handleSubmitBid(e)}
+                            sx={bidButtonStyle}
+                          >
+                            Place bid
+                          </Button>
+                        </Box>
+                      </Box>
+                    )}
+
+                    {ownerAd && (
+                      <Box sx={bidContainer}>
+                        <Box sx={{ height: 'auto' }}>
+                          <Button
+                            variant='contained'
+                            disabled={!startButton}
+                            onClick={(e) => handleStartAuction(e)}
+                            sx={bidButtonStyle}
+                          >
+                            Start Auction
+                          </Button>
+                        </Box>
+                      </Box>
+                    )}
                   </Box>
-                )}
-              </Box>
+                </Box>
+              </Paper>
             </Box>
-          </Paper>
-        </Box>
+          )}
+        </Fragment>
       )}
     </div>
   );
@@ -290,10 +306,13 @@ const mapStateToProps = (state) => ({
   highestBid: state.ad.highestBid,
   loadingBid: state.ad.loadingHighestBid,
   auth: state.auth,
+  adImage: state.ad.adImage,
+  imageLoading: state.ad.imageLoading,
 });
 
 export default connect(mapStateToProps, {
   loadAdDetails,
+  loadAdImage,
   loadHighestBid,
   placeBid,
   startAuction,
@@ -301,4 +320,7 @@ export default connect(mapStateToProps, {
   clearAlerts,
   updateTimer,
   updateAdDetails,
+  clearAdImage,
+  setImageLoadingStatus,
+  clearAdDetails,
 })(Ad);
