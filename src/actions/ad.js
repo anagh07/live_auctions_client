@@ -11,6 +11,10 @@ import {
   UPDATE_AD_IN_AD_LIST,
   UPDATE_TIMER,
   UPDATE_AD_DETAILS,
+  LOAD_AD_IMAGE,
+  CLEAR_AD_IMAGE,
+  IMAGE_LOADING,
+  CLEAR_AD_DETAILS,
 } from './types';
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
@@ -70,6 +74,52 @@ export const loadAdDetails = (adId) => async (dispatch) => {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'error', 50000)));
     }
   }
+};
+
+// Clear ad details
+export const clearAdDetails = () => (dispatch) => {
+  dispatch({
+    type: CLEAR_AD_DETAILS,
+  });
+};
+
+// Load ad image
+export const loadAdImage = (imageUrl) => async (dispatch) => {
+  try {
+    const res = await axios.get(imageUrl, {
+      responseType: 'blob',
+    });
+
+    dispatch({
+      type: LOAD_AD_IMAGE,
+      payload: URL.createObjectURL(res.data),
+    });
+  } catch (error) {
+    // Get errors array sent by api
+    console.log(error);
+    if (!error.response) {
+      return dispatch(setAlert('Server error', 'error'));
+    }
+    const errors = error.response.data.errors;
+    if (errors) {
+      console.log(errors);
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'error', 50000)));
+    }
+  }
+};
+
+// Clear ad image
+export const clearAdImage = (adId) => async (dispatch) => {
+  dispatch({
+    type: CLEAR_AD_IMAGE,
+  });
+};
+
+// Set image status to loading
+export const setImageLoadingStatus = () => async (dispatch) => {
+  dispatch({
+    type: IMAGE_LOADING,
+  });
 };
 
 // Set ad details

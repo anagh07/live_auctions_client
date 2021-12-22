@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Card from '@mui/material/Card';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // Actions
-import { loadAdDetails } from '../actions/ad';
+import { loadAdDetails, loadAdImage, setImageLoadingStatus } from '../actions/ad';
 // MUI Components
 import { CardActionArea } from '@mui/material';
 import CardContent from '@mui/material/CardContent';
@@ -14,8 +14,10 @@ import imagePlaceholder from '../images/no-image-icon.png';
 import { secondsToHmsShort } from '../utils/secondsToHms';
 
 function MediaCard(props) {
+  const navigate = useNavigate();
+
   const handleCardClick = (e) => {
-    props.loadAdDetails(props.ad._id);
+    navigate(`/ads/${props.ad._id}`);
   };
 
   // Auction status based on the ad-details
@@ -32,11 +34,10 @@ function MediaCard(props) {
   };
 
   return (
-    <Link
+    <a
       onClick={(e) => {
         handleCardClick(e);
       }}
-      to={`/ads/${props.ad._id}`}
       style={{ textDecoration: 'none' }}
     >
       <Card style={props.cardStyle}>
@@ -65,7 +66,7 @@ function MediaCard(props) {
           </CardContent>
         </CardActionArea>
       </Card>
-    </Link>
+    </a>
   );
 }
 
@@ -73,4 +74,8 @@ const mapStateToProps = (state) => ({
   adDetails: state.ad.adDetails,
 });
 
-export default connect(mapStateToProps, { loadAdDetails })(MediaCard);
+export default connect(mapStateToProps, {
+  loadAdDetails,
+  loadAdImage,
+  setImageLoadingStatus,
+})(MediaCard);

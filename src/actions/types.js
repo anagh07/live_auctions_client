@@ -18,6 +18,10 @@ export const LOAD_ADS = 'LOAD_ADS';
 export const REMOVE_AD = 'REMOVE_AD';
 export const ADD_AD = 'ADD_AD';
 export const LOAD_AD_DETAILS = 'LOAD_AD_DETAILS';
+export const CLEAR_AD_DETAILS = 'CLEAR_AD_DETAILS';
+export const LOAD_AD_IMAGE = 'LOAD_AD_IMAGE';
+export const IMAGE_LOADING = 'IMAGE_LOADING';
+export const CLEAR_AD_IMAGE = 'CLEAR_AD_IMAGE';
 export const LOAD_HIGHEST_BID = 'LOAD_HIGHEST_BID';
 export const PLACE_BID = 'PLACE_BID';
 
