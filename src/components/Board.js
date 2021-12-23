@@ -84,7 +84,7 @@ const Board = (props) => {
       <Box sx={adAreaStyle}>
         {props.ads.slice(firstAdIndex, lastAdIndex).map((ad) => {
           return ad.auctionEnded ? null : (
-            <div className='ad__container' key={ad._id}>
+            <div className='product__container' key={ad._id}>
               <Card ad={ad} key={ad._id} dashCard={false} cardStyle={boardCardStyle} />
             </div>
           );
