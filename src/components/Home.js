@@ -21,7 +21,7 @@ const Home = (props) => {
       <div className='alert__display'>
         <Alert />
       </div>
-      <div className='ad__board'>
+      <div className='product__board'>
         <Board />
       </div>
     </div>

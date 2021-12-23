@@ -1,4 +1,4 @@
-.ad__board {
+.product__board {
     display: grid;
     grid-template-columns: auto auto auto;
     grid-gap: 1.2rem;
