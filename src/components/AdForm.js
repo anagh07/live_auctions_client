@@ -187,7 +187,7 @@ const AdForm = (props) => {
                 handleFormChange(e);
               }}
               size='small'
-              placeholder='Duration in seconds'
+              placeholder='Duration in seconds (Max 1 hour)'
               sx={formTextField}
             ></TextField>
           </Box>
